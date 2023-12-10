@@ -1,0 +1,36 @@
+html{
+    scroll-behavior: smooth;
+}
+
+*{
+    background-color: antiquewhite;
+    font-family: 'Times New Roman', Times, serif;
+}
+
+.main {
+  
+    margin-top: 40px;
+    margin-left: 80px;
+    align-items: center;
+
+}
+
+.heading h1 {
+    font-size: 50px;
+    margin-left: 500px;
+    margin-bottom: 60px;
+}
+.heading span{
+    color: green;
+}
+
+.image {
+    display:block;
+    max-width:100%;
+    height:auto;
+}
+
+.paragraph {
+    font-size: 30px;
+    font-style: italic;
+}

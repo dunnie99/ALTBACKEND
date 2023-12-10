@@ -1,0 +1,44 @@
+/* apply css reset*/
+
+*,* ::before, * ::after{
+    box-sizing: content-box;
+}
+
+*{
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    -webkit-font-smoothing: antialiased;
+}
+
+img {
+    display: block;
+    max-width: 100%;
+}
+
+.container {
+    background-color: rgba(46, 196, 181, 0.04);
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.row {
+    display: flex;
+    gap: 120px;
+}
+
+.col-1{
+    width: 460px;
+}
+
+.col-2{
+    width: 580px;
+    height: 680px;
+}
+
+
+
