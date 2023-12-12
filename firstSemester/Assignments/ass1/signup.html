@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up for AltSchool</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <nav>
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="signup.html">Sign Up</a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <section>
+            <h1>AltSchool Enrollment Form</h1>
+            <form action="submit_form" method="post">
+                <label for="name">Full Name:</label>
+                <input type="text" id="name" name="name" required>
+
+                <label for="email">Email:</label>
+                <input type="email" id="email" name="email" required>
+
+                <label for="phone">Phone Number:</label>
+                <input type="tel" id="phone" name="phone" required pattern="[0-9]{10}">
+
+                <label for="course">Course of Interest:</label>
+                <select id="course" name="course" required>
+                    <option value="backend">Backend Engineering</option>
+                    <option value="frontend">Frontend Engineering</option>
+                    <option value="Product_management">Product Management</option>
+                    <option value="data_science">Data Science</option>
+                </select>
+
+                <label for="reason">Why do you want to join AltSchool?</label>
+                <textarea id="reason" name="reason" required></textarea>
+
+                <button type="submit">Submit</button>
+            </form>
+        </section>
+    </main>
+    <footer>
+        <p>&copy; 2023 AltSchool Africa</p>
+    </footer>
+</body>
+</html>
