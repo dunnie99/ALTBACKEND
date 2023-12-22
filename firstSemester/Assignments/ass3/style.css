@@ -121,8 +121,10 @@ a {
 }
 
 .grid-container label {
-  font-size: 0.875rem;
+  font-size: 0.875rem; /* this is the same as 14px */
   font-weight: 600;
+  letter-spacing: 0.1px;
+  color: #011c34;
 }
 
 button {
