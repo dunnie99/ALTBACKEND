@@ -1,18 +1,16 @@
-from typing import List, Optional, Union
-from fastapi import FastAPI, HTTPException, status
+from fastapi import FastAPI, HTTPException, status, Depends
 from pydantic import BaseModel, Field
 from uuid import uuid4, UUID
+from typing import List
 
 app = FastAPI(title="Medical Appointment API")
 
-# Database Simulation
+# Simulated Databases
 db_patients = []
 db_doctors = []
 db_appointments = []
 
-
-
-# Models
+# Pydantic Models for Data Validation
 class Patient(BaseModel):
     id: UUID = Field(default_factory=uuid4)
     name: str
@@ -33,12 +31,14 @@ class Appointment(BaseModel):
     id: UUID = Field(default_factory=uuid4)
     patient_id: UUID
     doctor_id: UUID
-    date: str  # Simple string for date representation
+    date: str
+    
 
 @app.get("/")
 def home():
     return "Hello from my API"
-# CRUD for Patients
+
+# CRUD Operations for Patients
 @app.post("/patients/", response_model=Patient, status_code=status.HTTP_201_CREATED)
 def create_patient(patient: Patient):
     db_patients.append(patient)
@@ -48,7 +48,8 @@ def create_patient(patient: Patient):
 def read_patients():
     return db_patients
 
-@app.get("/patients/{patient_id}", response_model=Patient)
+@app.get("/patients/{patient_id}",
+ response_model=Patient)
 def read_patient(patient_id: UUID):
     for patient in db_patients:
         if patient.id == patient_id:
@@ -69,7 +70,7 @@ def delete_patient(patient_id: UUID):
     db_patients = [patient for patient in db_patients if patient.id != patient_id]
     return {"message": "Patient deleted"}
 
-# CRUD for Doctors
+# CRUD Operations for Doctors
 @app.post("/doctors/", response_model=Doctor, status_code=status.HTTP_201_CREATED)
 def create_doctor(doctor: Doctor):
     db_doctors.append(doctor)
@@ -111,12 +112,40 @@ def create_appointment(appointment: Appointment):
     db_appointments.append(appointment)
     return appointment
 
-@app.post("/appointments/{appointment_id}/complete", response_model=Appointment)
-def complete_appointment(appointment_id: UUID):
+@app.get("/appointments/", response_model=List[Appointment])
+def read_appointments():
+    return db_appointments
+
+@app.get("/appointments/{appointment_id}", response_model=Appointment)
+def read_appointment(appointment_id: UUID):
     for appointment in db_appointments:
         if appointment.id == appointment_id:
+            return appointment
+    raise HTTPException(status_code=404, detail="Appointment not found")
+
+@app.put("/appointments/complete/{appointment_id}", status_code=status.HTTP_200_OK)
+def complete_appointment(appointment_id: UUID):
+    for appointment in db_appointments:
+        if appointment.id == appointment_id and not appointment.completed:
+            appointment.completed = True
             for doctor in db_doctors:
                 if doctor.id == appointment.doctor_id:
                     doctor.is_available = True
-                    return appointment
+                    break
+            return {"message": "Appointment completed and doctor is now available"}
+    raise HTTPException(status_code=404, detail="Appointment not found or already completed")
+
+
+@app.delete("/appointments/{appointment_id}", status_code=status.HTTP_204_NO_CONTENT)
+def cancel_appointment(appointment_id: UUID, patient_id: UUID):
+    for appointment in db_appointments:
+        if appointment.id == appointment_id:
+            if appointment.patient_id != patient_id:
+                raise HTTPException(status_code=403, detail="Unauthorized: You can only cancel your own appointments")
+            for doctor in db_doctors:
+                if doctor.id == appointment.doctor_id:
+                    doctor.is_available = True
+                    break
+            db_appointments.remove(appointment)
+            return {"message": "Appointment cancelled and doctor is now available"}
     raise HTTPException(status_code=404, detail="Appointment not found")
