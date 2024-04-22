@@ -32,6 +32,7 @@ class Appointment(BaseModel):
     patient_id: UUID
     doctor_id: UUID
     date: str
+    completed: bool = False  # Indicates if the appointment is completed
     
 
 @app.get("/")
@@ -134,6 +135,7 @@ def complete_appointment(appointment_id: UUID):
                     break
             return {"message": "Appointment completed and doctor is now available"}
     raise HTTPException(status_code=404, detail="Appointment not found or already completed")
+
 
 
 @app.delete("/appointments/{appointment_id}", status_code=status.HTTP_204_NO_CONTENT)
